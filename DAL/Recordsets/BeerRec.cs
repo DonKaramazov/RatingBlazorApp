@@ -22,21 +22,21 @@ namespace DAL.Recordsets
             return _db.SelectMany<BeerModel, dynamic>(query, new { });
         }
 
-        public Task InsertBeer(BeerModel beer)
-        {
-            string query = @"insert into dbo.BEER (name, description, color, style, abv)
-                             values (@name, @description, @color, @style, @abv)";
+        //public Task InsertBeer(BeerModel beer)
+        //{
+        //    string query = @"insert into dbo.BEER (name, description, color, style, abv)
+        //                     values (@name, @description, @color, @style, @abv)";
 
-            return _db.SaveData(query, beer);
-        }
+        //    return _db.SaveData(query, beer);
+        //}
 
-        public Task<int> InsertBeer2(BeerModel beer)
+        public Task<int> InsertBeer(BeerModel beer)
         {
             string query = @"insert into dbo.BEER (name, description, color, style, abv)
                              values (@name, @description, @color, @style, @abv);
                              select cast(scope_identity() as int)";
 
-            return _db.SaveData2(query, beer);
+            return _db.SaveData(query, beer);
         }
     }
 }

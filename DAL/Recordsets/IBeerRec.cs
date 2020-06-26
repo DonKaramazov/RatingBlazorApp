@@ -6,9 +6,9 @@ namespace DAL.Recordsets
 {
     public interface IBeerRec
     {
-        Task InsertBeer(BeerModel beer);
+        //Task InsertBeer(BeerModel beer);
         Task<List<BeerModel>> SelectAll();
 
-        Task<int> InsertBeer2(BeerModel beer);
+        Task<int> InsertBeer(BeerModel beer);
     }
 }
