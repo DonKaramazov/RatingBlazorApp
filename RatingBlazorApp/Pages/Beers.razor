@@ -1,0 +1,113 @@
+﻿@page "/beers"
+
+@using DAL.Recordsets
+@using DAL.Models
+
+@inject IBeerRec _db
+
+<h1>Beers</h1>
+<br />
+
+<h4>Insert new beer</h4>
+<br/>
+
+<EditForm Model="@newBeer" OnValidSubmit="@InsertBeer">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <InputText id="name" class="form-control" @bind-Value="@newBeer.Name" placeholder="Name"></InputText>
+    </div>
+
+    <div class="form-group">
+        <InputText id="desc" class="form-control" @bind-Value="@newBeer.Description" placeholder="Description"></InputText>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <InputText id="color" class="form-control" @bind-Value="@newBeer.Color" placeholder="Color"></InputText>
+        </div>
+
+        <div class="form-group col-md-4">
+            <InputText id="style" class="form-control" @bind-Value="@newBeer.Style" placeholder="Style"></InputText>
+        </div>
+
+        <div class="form-group col-md-2">
+            <InputText id="abv" class="form-control" @bind-Value="@newBeer.Abv" placeholder="ABV"></InputText>
+        </div>
+    </div>
+
+   
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<br />
+<br />
+<br />
+
+
+@if (BeerList is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Couleur</th>
+                <th scope="col">Style</th>
+                <th scope="col">TEA</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BeerModel beer in BeerList)
+            {
+                <tr>
+                    <th scope="row">@beer.IdBee</th>
+                    <td>@beer.Name</td>
+                    <td>@beer.Color</td>
+                    <td>@beer.Style</td>
+                    <td>@beer.Abv</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    private List<BeerModel> BeerList { get; set; }
+    private OPBeer newBeer = new OPBeer();
+
+    protected override async Task OnInitializedAsync()
+    {
+        BeerList = await _db.SelectAll();
+    }
+
+    private async Task InsertBeer()
+    {
+        BeerModel beer = new BeerModel()
+        {
+            Name = newBeer.Name,
+            Description = newBeer.Description,
+            Color = newBeer.Color,
+            Style = newBeer.Style,
+            Abv = decimal.Parse(newBeer.Abv)
+        };
+
+        //await _db.InsertBeer(beer);
+
+        //A retravailler, l'affectation de l'id ne devrait pas se faire içi
+        beer.IdBee = await _db.InsertBeer2(beer); 
+
+        BeerList.Add(beer);
+
+        newBeer = new OPBeer();
+    }
+
+}
