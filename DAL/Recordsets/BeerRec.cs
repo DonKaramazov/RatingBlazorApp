@@ -36,7 +36,7 @@ namespace DAL.Recordsets
                              values (@name, @description, @color, @style, @abv);
                              select cast(scope_identity() as int)";
 
-            return _db.SaveData(query, beer);
+            return _db.SaveData<int,BeerModel>(query, beer);
         }
     }
 }

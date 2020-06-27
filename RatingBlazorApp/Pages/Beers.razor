@@ -4,19 +4,21 @@
 @using DAL.Models
 
 @inject IBeerRec _db
+@inject IJSRuntime JSRuntime
 
 <h1>Beers</h1>
 <br />
 
-<h4>Insert new beer</h4>
-<br/>
+<h3><b>Insert new beer</b></h3>
+<hr />
 
 <EditForm Model="@newBeer" OnValidSubmit="@InsertBeer">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
     <div class="form-group">
-        <InputText id="name" class="form-control" @bind-Value="@newBeer.Name" placeholder="Name"></InputText>
+        @*<input type="text" id="name" class="form-control" @bind="@newBeer.Name" @ref="tbName" placeholder="Name"/>*@
+        <InputText type="text" id="@FocusID" class="form-control" @bind-Value="@newBeer.Name" placeholder="Name" />
     </div>
 
     <div class="form-group">
@@ -25,11 +27,23 @@
 
     <div class="form-row">
         <div class="form-group col-md-4">
-            <InputText id="color" class="form-control" @bind-Value="@newBeer.Color" placeholder="Color"></InputText>
+            <InputSelect id="color" class="form-control" @bind-Value="@newBeer.Color">
+                <option value="">Select a color</option>
+                @foreach (string color in Colors)
+                {
+                    <option value="@color">@color</option>
+                }
+            </InputSelect>
         </div>
 
         <div class="form-group col-md-4">
-            <InputText id="style" class="form-control" @bind-Value="@newBeer.Style" placeholder="Style"></InputText>
+            <InputSelect id="style" class="form-control" @bind-Value="@newBeer.Style">
+                <option value="">Select a style</option>
+                @foreach (string style in Styles)
+                {
+                    <option value="@style">@style</option>
+                }
+            </InputSelect>
         </div>
 
         <div class="form-group col-md-2">
@@ -37,9 +51,9 @@
         </div>
     </div>
 
-   
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+
+    <button type="submit" class="btn btn-primary">Save</button>
 </EditForm>
 
 <br />
@@ -84,9 +98,22 @@ else
     private List<BeerModel> BeerList { get; set; }
     private OPBeer newBeer = new OPBeer();
 
+    private string[] Colors => new[] { "BLANCHE", "BLONDE", "AMBREE", "BRUNE" };
+    private string[] Styles => new[] { "ABBAYE","BLANCHE","LAGER","PALE ALE","IPA","TRIPLE","STOUT","SAISON","SOUR","FUT"};
+
+    private string FocusID = "name-focus-id";
+
     protected override async Task OnInitializedAsync()
     {
         BeerList = await _db.SelectAll();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("setFocusOnElement", FocusID);
+        }
     }
 
     private async Task InsertBeer()
@@ -103,11 +130,14 @@ else
         //await _db.InsertBeer(beer);
 
         //A retravailler, l'affectation de l'id ne devrait pas se faire içi
-        beer.IdBee = await _db.InsertBeer2(beer); 
+        beer.IdBee = await _db.InsertBeer(beer);
 
         BeerList.Add(beer);
 
         newBeer = new OPBeer();
+
+        // ne fonctionne pas pour le moment malgré le passage dans le js
+        await JSRuntime.InvokeVoidAsync("setFocusOnElement", FocusID);
     }
 
 }
