@@ -68,5 +68,15 @@ namespace DAL
                 return result;
             }
         }
+
+        public async Task Delete(string query)
+        {
+            string connectionString = _config.GetConnectionString(ConnectionStringName);
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.ExecuteAsync(query);
+            }
+        }
     }
 }

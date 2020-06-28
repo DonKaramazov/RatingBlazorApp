@@ -2,6 +2,7 @@
 
 @using DAL.Recordsets
 @using DAL.Models
+@using Components;
 
 @inject IBeerRec _db
 @inject IJSRuntime JSRuntime
@@ -17,7 +18,6 @@
     <ValidationSummary />
 
     <div class="form-group">
-        @*<input type="text" id="name" class="form-control" @bind="@newBeer.Name" @ref="tbName" placeholder="Name"/>*@
         <InputText type="text" id="@FocusID" class="form-control" @bind-Value="@newBeer.Name" placeholder="Name" />
     </div>
 
@@ -70,7 +70,7 @@ else
     <table class="table table-striped">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">#</th>
+                <th scope="col"></th>
                 <th scope="col">Nom</th>
                 <th scope="col">Couleur</th>
                 <th scope="col">Style</th>
@@ -81,7 +81,9 @@ else
             @foreach (BeerModel beer in BeerList)
             {
                 <tr>
-                    <th scope="row">@beer.IdBee</th>
+                    <th scope="row">
+                        <a class="oi oi-x" href="" @onclick="@(() => DeleteBeer(beer.IdBee))" @onclick:preventDefault data-toggle="tooltip" title="Supprimer"></a>
+                    </th>
                     <td>@beer.Name</td>
                     <td>@beer.Color</td>
                     <td>@beer.Style</td>
@@ -91,6 +93,9 @@ else
         </tbody>
     </table>
 }
+<ConfirmModal ConfirmationChanged="ConfirmDelete" @ref="DeleteConfirmation"
+              Message="@(SelectedBeer != null ? $"Etes vous sûr de vouloir supprimer \"{SelectedBeer.Name}\"?" : String.Empty)">
+</ConfirmModal>
 
 
 
@@ -102,6 +107,9 @@ else
     private string[] Styles => new[] { "ABBAYE","BLANCHE","LAGER","PALE ALE","IPA","TRIPLE","STOUT","SAISON","SOUR","FUT"};
 
     private string FocusID = "name-focus-id";
+    private ConfirmModal DeleteConfirmation { get; set; }
+
+    private BeerModel SelectedBeer;
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,4 +148,24 @@ else
         await JSRuntime.InvokeVoidAsync("setFocusOnElement", FocusID);
     }
 
+    private void DeleteBeer(int idBee)
+    {
+        SelectedBeer = BeerList.FirstOrDefault(b => b.IdBee == idBee);
+
+        if (SelectedBeer != null)
+        {
+            DeleteConfirmation.Show();
+        }
+    }
+
+    private async Task ConfirmDelete(bool deleteConfirmed)
+    {
+        if (deleteConfirmed && SelectedBeer != null)
+        {
+            await _db.DeleteBeer(SelectedBeer.IdBee);
+            BeerList.Remove(SelectedBeer);
+
+            SelectedBeer = null;
+        }
+    }
 }

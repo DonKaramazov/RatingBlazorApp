@@ -38,5 +38,12 @@ namespace DAL.Recordsets
 
             return _db.SaveData<int,BeerModel>(query, beer);
         }
+
+        public Task DeleteBeer(int idBee)
+        {
+            string query = $"delete from dbo.BEER where idbee = '{idBee}' ";
+
+            return _db.Delete(query);
+        }
     }
 }

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RatingBlazorApp", "RatingBlazorApp\RatingBlazorApp.csproj", "{7A2DE61A-F513-4790-93BB-3D72ACA21398}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{A8E6D888-CDFB-4690-8B07-D97F8E93C854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{A8E6D888-CDFB-4690-8B07-D97F8E93C854}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "Components\Components.csproj", "{CC6CCB59-A3C9-4FFD-9BAE-FB4D65244720}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A8E6D888-CDFB-4690-8B07-D97F8E93C854}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8E6D888-CDFB-4690-8B07-D97F8E93C854}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8E6D888-CDFB-4690-8B07-D97F8E93C854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC6CCB59-A3C9-4FFD-9BAE-FB4D65244720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC6CCB59-A3C9-4FFD-9BAE-FB4D65244720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC6CCB59-A3C9-4FFD-9BAE-FB4D65244720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC6CCB59-A3C9-4FFD-9BAE-FB4D65244720}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

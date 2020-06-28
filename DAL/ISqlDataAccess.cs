@@ -9,5 +9,7 @@ namespace DAL
         //Task SaveData<T>(string query, T parameters);
 
         Task<T> SaveData<T,U>(string query, U parameters);
+
+        Task Delete(string query);
     }
 }

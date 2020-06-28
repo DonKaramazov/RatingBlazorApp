@@ -10,5 +10,7 @@ namespace DAL.Recordsets
         Task<List<BeerModel>> SelectAll();
 
         Task<int> InsertBeer(BeerModel beer);
+
+        Task DeleteBeer(int idBee);
     }
 }
