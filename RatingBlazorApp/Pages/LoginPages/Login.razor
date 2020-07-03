@@ -1,0 +1,68 @@
+﻿@page "/"
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager;
+@inject IUserRec _db
+
+
+<EditForm Model="@user" OnValidSubmit="@ValidateUser">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div>
+        <br /><br /><br /><br />
+    </div>
+    <div>
+        <h3 style="font-weight:bold">Se connecter</h3>
+    </div>
+    <div>
+        <br />
+    </div>
+    <div class="col-12 row">
+        <input class="form-control col-12" @bind="user.EmailAddress" placeholder="adresse email" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <input type="password" class="form-control col-12" @bind="user.Password" placeholder="mot de passe" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control col-6 btn btn-dark" value="Se connecter" />
+        <a href="/signup" class="col-3">S'inscrire</a>
+    </div>
+    <br />
+    <div class="col-12 row" style="text-align:left; font-weight:bold">
+        <span class="col-12">@LoginMesssage</span>
+    </div>
+</EditForm>
+
+@code {
+    private UserModel user;
+    public string LoginMesssage { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        user = new UserModel();
+
+        return base.OnInitializedAsync();
+    }
+
+    private async Task<bool> ValidateUser()
+    {
+        UserModel returnedUser = await _db.LogOn(user.EmailAddress, user.Password);
+
+        if(returnedUser != null)
+        {
+            ((AuthenticationProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user.EmailAddress);
+
+            //Back to home page
+            NavigationManager.NavigateTo("/index");
+        }
+        else
+        {
+            LoginMesssage = "Mauvais identifiant ou mot de passe";
+        }
+
+        return await Task.FromResult(true);
+    }
+
+}

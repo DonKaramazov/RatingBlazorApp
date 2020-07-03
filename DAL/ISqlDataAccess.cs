@@ -10,6 +10,8 @@ namespace DAL
 
         Task<T> SaveData<T,U>(string query, U parameters);
 
+        Task<T> SelectOne<T, U>(string query, U parameters);
+
         Task Delete(string query);
     }
 }

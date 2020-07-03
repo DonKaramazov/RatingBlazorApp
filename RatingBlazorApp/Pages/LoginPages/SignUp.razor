@@ -1,0 +1,72 @@
+﻿@page  "/signup"
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IUserRec _db
+
+<EditForm Model="@user" OnValidSubmit="@RegisterUser">
+    <div>
+        <br /><br />
+    </div>
+    <div>
+        <h3 style="font-weight:bold">Inscription</h3>
+    </div>
+    <div>
+        <br />
+    </div>
+    <div class="col-12 row">
+        <input class="form-control col-12" @bind="user.EmailAddress" placeholder="adresse email" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <input class="form-control col-12" @bind="user.Nickname" placeholder="pseudo" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <input type="password" class="form-control col-12" @bind="user.Password" placeholder="mot de passe" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <input type="password" class="form-control col-12" @bind="user.ConfirmPassword" placeholder="confirmer le mot de passe" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control col-6 btn btn-dark" value="S'inscrire" />
+        <a href="/" class="col-6">Déjà un compte?</a>
+    </div>
+    <br />
+    <div class="col-12 row" style="text-align:left; font-weight:bold">
+        <span class="col-12">@LoginMesssage</span>
+    </div>
+</EditForm>
+
+@code {
+
+    private UserModel user;
+    public string LoginMesssage { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        user = new UserModel();
+        return base.OnInitializedAsync();
+    }
+
+    private async Task<bool> RegisterUser()
+    {
+        int idUse = await _db.RegisterUser(user);
+
+        if(idUse != 0)
+        {
+            user.IdUse = idUse;
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            LoginMesssage = "Une erreur est survenue pendant l'enregistrement.";
+        }
+
+        return await Task.FromResult(true);
+    }
+
+}

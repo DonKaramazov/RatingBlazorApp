@@ -33,29 +33,17 @@ namespace DAL
             }
         }
 
-        //public async Task SaveData<T>(string query, T parameters)
-        //{
-        //    string connectionString = _config.GetConnectionString(ConnectionStringName);
+        public async Task<T> SelectOne<T,U>(string query, U parameters)
+        {
+            string connectionString = _config.GetConnectionString(ConnectionStringName);
 
-        //    using (IDbConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        await connection.ExecuteAsync(query, parameters);
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var data = await connection.QueryFirstOrDefaultAsync<T>(query, parameters);
 
-        //        //await connection.ExecuteScalarAsync<int>(query, parameters);
-        //    }
-        //}
-
-        //public async Task<int> SaveData<T>(string query, T parameters)
-        //{
-        //    string connectionString = _config.GetConnectionString(ConnectionStringName);
-
-        //    using (IDbConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        var id = await connection.QuerySingleAsync<int>(query, parameters);
-
-        //        return int.Parse(id.ToString());
-        //    }
-        //}
+                return data;
+            }
+        }
 
         public async Task<T> SaveData<T,U>(string query, U parameters)
         {

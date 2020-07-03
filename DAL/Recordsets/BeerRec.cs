@@ -22,14 +22,6 @@ namespace DAL.Recordsets
             return _db.SelectMany<BeerModel, dynamic>(query, new { });
         }
 
-        //public Task InsertBeer(BeerModel beer)
-        //{
-        //    string query = @"insert into dbo.BEER (name, description, color, style, abv)
-        //                     values (@name, @description, @color, @style, @abv)";
-
-        //    return _db.SaveData(query, beer);
-        //}
-
         public Task<int> InsertBeer(BeerModel beer)
         {
             string query = @"insert into dbo.BEER (name, description, color, style, abv)
@@ -44,6 +36,13 @@ namespace DAL.Recordsets
             string query = $"delete from dbo.BEER where idbee = '{idBee}' ";
 
             return _db.Delete(query);
+        }
+
+        public Task<BeerModel> ReadById(int idBee)
+        {
+            string query = "select * from dbo.BEER where Idbee = @IdBee";
+
+            return _db.SelectOne<BeerModel, dynamic>(query, new { IdBee = idBee });
         }
     }
 }
