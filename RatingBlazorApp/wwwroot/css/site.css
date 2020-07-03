@@ -115,6 +115,8 @@ app {
 
 .validation-message {
     color: red;
+    font-style: italic;
+    margin-top: .25rem !important;
 }
 
 #blazor-error-ui {
