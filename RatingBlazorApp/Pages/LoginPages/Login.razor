@@ -3,6 +3,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager;
 @inject IUserRec _db
+@inject IJSRuntime JSRuntime
 
 
 <EditForm Model="@user" OnValidSubmit="@ValidateUser">
@@ -17,7 +18,7 @@
         <br />
     </div>
     <div class="col-12 row">
-        <input class="form-control col-12" @bind="user.EmailAddress" placeholder="adresse email" />
+        <input class="form-control col-12" id="signup-focus" @bind="user.EmailAddress" placeholder="adresse email" />
     </div>
     <br />
     <div class="col-12 row">
@@ -46,13 +47,21 @@
         return base.OnInitializedAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("setFocusOnElement", "signup-focus");
+        }
+    }
+
     private async Task<bool> ValidateUser()
     {
         UserModel returnedUser = await _db.LogOn(user.EmailAddress, user.Password);
 
-        if(returnedUser != null)
+        if (returnedUser != null)
         {
-            ((AuthenticationProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(user.EmailAddress);
+            ((AuthenticationProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(returnedUser);
 
             //Back to home page
             NavigationManager.NavigateTo("/index");

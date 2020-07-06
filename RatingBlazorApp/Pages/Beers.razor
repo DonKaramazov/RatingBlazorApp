@@ -7,11 +7,10 @@
 @inject IBeerRec _db
 @inject IJSRuntime JSRuntime
 
-<h1>Bières</h1>
+<h1 class="display-1">Bières</h1>
 <br />
 
 <h3><b>Ajout d'une bière</b></h3>
-<hr />
 
 <EditForm Model="@newBeer" OnValidSubmit="@InsertBeer">
     <DataAnnotationsValidator />
@@ -61,10 +60,10 @@
 
 @if (BeerList is null)
 {
-<div class="d-flex align-items-center">
-    <strong>Chargement des binouzes ...</strong>
-    <div class="spinner-border ml-3" role="status" aria-hidden="true"></div>
-</div>
+    <div class="d-flex align-items-center">
+        <strong>Chargement des binouzes ...</strong>
+        <div class="spinner-border ml-3" role="status" aria-hidden="true"></div>
+    </div>
 }
 else
 {

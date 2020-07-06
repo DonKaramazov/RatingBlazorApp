@@ -6,48 +6,49 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IUserRec _db
+@inject IJSRuntime JSRuntime
 
-    <EditForm Model="@user" OnValidSubmit="@RegisterUser">
-        <FluentValidationValidator  />
-        <div>
-            <br /><br />
-        </div>
-        <div>
-            <h3 style="font-weight:bold">Inscription</h3>
-        </div>
-        <div>
-            <br />
-        </div>
-        <div class="col-12 row">
-            <InputText class="form-control col-12" @bind-Value="user.EmailAddress" placeholder="adresse email" />
-            <ValidationMessage class="mt-1" For="@(() => user.EmailAddress)"/>
-        </div>
+<EditForm Model="@user" OnValidSubmit="@RegisterUser">
+    <FluentValidationValidator />
+    <div>
+        <br /><br />
+    </div>
+    <div>
+        <h3 style="font-weight:bold">Inscription</h3>
+    </div>
+    <div>
         <br />
-        <div class="col-12 row">
-            <InputText class="form-control col-12" @bind-Value="user.Nickname" placeholder="pseudo" />
-            <ValidationMessage class="mt-1" For="@(() => user.Nickname)" />
-        </div>
-        <br />
-        <div class="col-12 row">
-            <InputText type="password" class="form-control col-12" @bind-Value="user.Password" placeholder="mot de passe" />
-            <ValidationMessage For="@(() => user.Password)" />
-        </div>
-        <br />
-        <div class="col-12 row">
-            <InputText type="password" class="form-control col-12" @bind-Value="user.ConfirmPassword" placeholder="confirmer le mot de passe" />
-            <ValidationMessage class="mt-1" For="@(() => user.ConfirmPassword)" />
-        </div>
-        <br />
-        <div class="col-12 row">
-            <span class="col-12"></span>
-            <input type="submit" class="form-control col-6 btn btn-dark" value="S'inscrire" />
-            <a href="/" class="col-6">Déjà un compte?</a>
-        </div>
-        <br />
-        <div class="col-12 row" style="text-align:left; font-weight:bold">
-            <span class="col-12">@LoginMesssage</span>
-        </div>
-    </EditForm>
+    </div>
+    <div class="col-12 row">
+        <InputText class="form-control col-12" id="signup-focus" @bind-Value="user.EmailAddress" placeholder="adresse email" />
+        <ValidationMessage class="mt-1" For="@(() => user.EmailAddress)" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <InputText class="form-control col-12" @bind-Value="user.Nickname" placeholder="pseudo" />
+        <ValidationMessage class="mt-1" For="@(() => user.Nickname)" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <InputText type="password" class="form-control col-12" @bind-Value="user.Password" placeholder="mot de passe" />
+        <ValidationMessage For="@(() => user.Password)" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <InputText type="password" class="form-control col-12" @bind-Value="user.ConfirmPassword" placeholder="confirmer le mot de passe" />
+        <ValidationMessage class="mt-1" For="@(() => user.ConfirmPassword)" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control col-6 btn btn-dark" value="S'inscrire" />
+        <a href="/" class="col-6">Déjà un compte?</a>
+    </div>
+    <br />
+    <div class="col-12 row" style="text-align:left; font-weight:bold">
+        <span class="col-12">@LoginMesssage</span>
+    </div>
+</EditForm>
 
 @code {
 
@@ -60,11 +61,19 @@
         return base.OnInitializedAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("setFocusOnElement", "signup-focus");
+        }
+    }
+
     private async Task<bool> RegisterUser()
     {
         int idUse = await _db.RegisterUser(user);
 
-        if(idUse != 0)
+        if (idUse != 0)
         {
             user.IdUse = idUse;
             NavigationManager.NavigateTo("/");
